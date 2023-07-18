@@ -35,6 +35,15 @@ class System():
 
     def findTraitInSystem(self,target):
         
+        """_Find a given trait in a system for example a scrapyard or shipyard
+
+        Raises:
+            Exception: raises when target isnt spelled correctly or no target exsists.
+
+        Returns:
+            string : Json string of the plannet object with the target trait or returns none if the trait isnt found.
+        """
+    
         if not target[0].isupper() and target[-1].isupper() :
             raise Exception('check spelling. Is case sensative!')
 
@@ -43,17 +52,26 @@ class System():
                 if target == trait['name'] or target == trait['symbol']:
                     return planet
                     # ITSSSS TOO DEEEP
-
         return None 
     
     
-    def getPlanetLoc(self,index, symbol = None):
+    def getPlanetLoc(self,index = None, symbol = None):
+        
+        """ gets the x,y cords of a planet given the symbol or index
+        
+        Raises:
+            when nither index or symbol is given it throws an error and askes for the index or symbol 
 
+        Returns:
+            list: returns a list in the form of (x,y) holding the transform of an object
+        """
+        if not index and not symbol:
+            raise Exception('needs a symbol or planet index')  
 
         if symbol:
-            for Cindex,planet  in enumerate(self.planets):
+            for planetIndex,planet  in enumerate(self.planets):
                 if planet['symbol'] == symbol:
-                    index = Cindex
+                    index = planetIndex
                     #Stop stacking ifs 
 
         return  (self.systemsData['data'][index]['x'],self.systemsData['data'][index]['y'])

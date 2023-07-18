@@ -19,16 +19,16 @@ class player():
         payload = {'symbol': Name,'faction': 'VOID'}
         currRequest = requests.post(requestsUrl,headers=requestHeader,verify= False,json=payload)
 
-        # self.rawPlayerData = currRequest.json()
+        self.rawPlayerData = currRequest.json()
         f = open (self.mainJsonPath,'r')
         
-        self.rawPlayerData = json.load(f) 
+        # self.rawPlayerData = json.load(f) 
         # pprint(self.rawPlayerData)
 
 
 
-        with open('mainPlayer.json', 'w') as f:
-            json.dump(self.rawPlayerData, f)
+        # with open('mainPlayer.json', 'w') as f:
+        #     json.dump(self.rawPlayerData, f)
 
 
         self.token = self.rawPlayerData['data']['token']
@@ -43,10 +43,10 @@ class player():
         url = "https://api.spacetraders.io/v2/my/ships"
         headers = {
             "Accept": "application/json",
-            "Authorization": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZGVudGlmaWVyIjoiVVNSMzM0MjEiLCJ2ZXJzaW9uIjoidjIiLCJyZXNldF9kYXRlIjoiMjAyMy0wNy0wOCIsImlhdCI6MTY4OTI0MzE5OSwic3ViIjoiYWdlbnQtdG9rZW4ifQ.oBemSbEv7bTjj0vlKSBvZwWQ2abOWh_5FLDZpxBPGRj6p4aO9wwRfBWaU3EmMjY57QIk-gJ6ycVT6zbRm13-qVTdF6_My-iqIsgbEGork6l3MHPPGykr3nS9m3swUlGsvHB7HeTxFUI0xacOudam3MooZaC1uLErSiclShaSag2gQEecSKqNr-G21fx5tYMQP58JY6g1WTWnvE450d_yWCC4MRZGH9_0DxcvHmQXUaa66xMDk4cRxceMk0z9BR6o5zTvP2lQULeZwhEIPhx3o8PEIPjB8iNcRNJnxYR9umYdYcYJetpOYczF7-LflG5O3jRbDFtyBxs2NoegileLLw"
-        }
+            "Authorization": f"Bearer {self.token}"#
+            }
         response = requests.get(url, headers=headers,verify= False)
-
+        
         self.ships = response.json()['data']
 
         idList = []
@@ -69,9 +69,14 @@ class player():
 
         return response.json()['data']['credits']
 
+    def purchase_ship(self,wishedType,amount = 1):
+        
+        for shipNum in range(1,amount+1):
+            
 
 
-p = player('player37134')
-c = p.getCredits()
-print(c)
+# p = player('player313254')
+# c = p.getCredits()
+# print(p.getToken())
+# print(c)
 
