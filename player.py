@@ -1,3 +1,4 @@
+from responseCatcher import responseCatcher
 import requests
 from pprint import pprint
 import urllib3
@@ -32,7 +33,16 @@ class Player:
         self.ships = self.rawPlayerData['data']['ship']
 
     def getMyShipIds(self, returnShips=False):
-        # Gets all of your ship ids 
+        """
+        Gets the ship ids or ship object's
+
+        Args:
+            returnShips: Flag that when raised causes the ship object to be returned.
+
+        Returns: A list of the players ship symbols.
+
+        """
+
         url = "https://api.spacetraders.io/v2/my/ships"
         headers = {
             "Accept": "application/json",
@@ -60,12 +70,21 @@ class Player:
 
         return response.json()['data']['credits']
 
-    def purchase_ship(self, wishedType, amount=1):
+    def purchase_ship(self, wishedType, waypoint, amount=1):
 
         for shipNum in range(1, amount + 1):
-            pass
+            url = "https://api.spacetraders.io/v2/my/ships"
 
-# p = Player('player313254')
-# c = p.getCredits()
-# print(p.getToken())
-# print(c)
+            payload = {
+                "shipType": wishedType,
+                "waypointSymbol": waypoint
+            }
+            headers = {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "Authorization": f"Bearer {self.token}"
+            }
+
+            response = requests.post(url, json=payload, headers=headers)
+            responseCatcher(response.status_code)
+            return response.status_code
