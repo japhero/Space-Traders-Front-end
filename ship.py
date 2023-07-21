@@ -1,10 +1,10 @@
-import requests
+import requests, urllib3
 from pprint import pprint
-import urllib3
-from nav import nav
+from responseCatcher import responseCatcher
+from inventory import Cargo
+from navigation import Navigation
 
 urllib3.disable_warnings()
-from responseCatcher import responseCatcher
 
 
 class Ship:
@@ -25,14 +25,13 @@ class Ship:
         self.shipSymbol = shipId
         self.token = token
 
-        self.nav = nav(token, shipId=self.shipSymbol)
+        self.nav = Navigation(token, shipSymbol=self.shipSymbol, NavObject=self.shipData["nav"])
+        self.cargo = Cargo(token, self.shipSymbol, self.shipData["cargo"])
 
-    def update(self):
+    def update(self, manual=None):
         """
         standard update function for updating data and also calling for dependencyUpdates.
         makes sure to manually update to save calls to api.
-
-
         """
 
         url = f"https://api.spacetraders.io/v2/my/ships/{self.shipSymbol}"
@@ -42,78 +41,8 @@ class Ship:
             "Authorization": f"Bearer {self.token}"
         }
 
-        self.shipData = requests.get(url, headers=headers, verify=False).json()["data"]
+        self.shipData = manual if manual else self.shipData = requests.get(url, headers=headers, verify=False).json()[
+            "data"]
 
         self.nav.update(self.shipData["nav"])
-
-    def jump(self, jumpLocation):
-        """
-
-        Args:
-            jumpLocation: the waypoint marker for the jump 
-
-        Returns:
-            object:
-        """
-        url = f"https://api.spacetraders.io/v2/my/ships/{self.shipSymbol}/jump"
-
-        payload = {"systemSymbol": f"{jumpLocation}"}
-
-        headers = {
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-            "Authorization": f"Bearer {self.token}"
-        }
-
-        response = requests.post(url, json=payload, headers=headers, verify=False)
-        return response.status_code
-
-    def orbit(self):
-        url = f"https://api.spacetraders.io/v2/my/ships/{self.shipSymbol}/orbit"
-
-        headers = {
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-            "Authorization": f"Bearer {self.token}"
-        }
-
-        response = requests.post(url, headers=headers)
-        return response.status_code
-
-    def navigate(self, waypoint):
-        url = f"https://api.spacetraders.io/v2/my/ships/{self.shipSymbol}/navigate"
-
-        payload = {"waypointSymbol": str(waypoint)}
-        headers = {
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-            "Authorization": f"Bearer {self.token}"
-        }
-
-        response = requests.post(url, json=payload, headers=headers)
-        return response.status_code
-
-    def warp(self, waypointSymbol):
-        url = f"https://api.spacetraders.io/v2/my/ships/{self.shipSymbol}/warp"
-
-        payload = {"waypointSymbol": waypointSymbol}
-        headers = {
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-            "Authorization": f"Bearer {self.token}"
-        }
-
-        response = requests.post(url, json=payload, headers=headers)
-        return response.status_code
-
-    def dock(self):
-        url = f"https://api.spacetraders.io/v2/my/ships/{self.shipSymbol}/dock"
-
-        headers = {
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-            "Authorization": "Bearer undefined"
-        }
-
-        response = requests.post(url, headers=headers)
-        return response.status_code
+        self.cargo.update(self.shipData["cargo"])
