@@ -20,8 +20,6 @@ class Ship:
         response = requests.get(url, headers=headers, verify=False)
 
         self.shipData = response.json()["data"]
-        self.currentFuel = self.shipData["fuel"]["current"]
-        self.fuelCapacity = self.shipData["fuel"]["capacity"]
         self.shipSymbol = shipId
         self.token = token
 
