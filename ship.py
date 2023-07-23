@@ -3,6 +3,8 @@ from pprint import pprint
 from responseCatcher import responseCatcher
 from inventory import Cargo
 from navigation import Navigation
+from engine import Engine
+from reactor import Reactor
 
 urllib3.disable_warnings()
 
@@ -23,8 +25,10 @@ class Ship:
         self.shipSymbol = shipId
         self.token = token
 
-        self.nav = Navigation(token, shipSymbol=self.shipSymbol, NavObject=self.shipData["nav"])
+        self.nav = Navigation(token, self.shipSymbol, self.shipData["nav"])
         self.cargo = Cargo(token, self.shipSymbol, self.shipData["cargo"])
+        self.engine = Engine(token, self.shipSymbol, self.shipData["engine"])
+        self.reactor = Reactor(token, self.shipSymbol, self.shipData["reactor"])
 
     def update(self, manual=None):
         """
@@ -44,3 +48,5 @@ class Ship:
 
         self.nav.update(self.shipData["nav"])
         self.cargo.update(self.shipData["cargo"])
+        self.engine.update(self.shipData["engine"])
+        self.reactor.update(self.shipData["reactor"])
