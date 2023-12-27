@@ -1,4 +1,3 @@
-import tkinter as tk
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 from ttkbootstrap.scrolled import ScrolledFrame
@@ -6,7 +5,7 @@ import Paths
 
 
 # noinspection PyArgumentList
-class ShipComponent(ttk.Frame):
+class ShipInfoComponent(ttk.Frame):
     def __init__(self, master, **kwargs):
         super().__init__(master, **kwargs)
         self.pack(fill=BOTH, expand=YES)
@@ -16,10 +15,12 @@ class ShipComponent(ttk.Frame):
         SQUARE_IMAGE_FILES = {
             "square-Default-Background": "Square-Dark-Default.png",
 
+
         }
 
         RECT_IMAGE_FILES = {
-            "rect-Default-Background": "Rect-Dark-Default.png"
+            "rect-Default-Background": "Rect-Dark-Default.png",
+            "rect-Default-RocketShipIcon": "rocketImage.png",
         }
 
         for key, item in (SQUARE_IMAGE_FILES).items():
@@ -34,25 +35,25 @@ class ShipComponent(ttk.Frame):
         container.columnconfigure(0, weight=0)
 
         nameLabel = ttk.Label(container,
-                              text="  Test \nWidget",
+                              text="         21",
                               compound="center",
-                              image="square-Default-Background",
+                              image="rect-Default-RocketShipIcon",
                               bootstyle="light"
                               )
 
         fuelNumber = ttk.Label(container,
                                text="21",
-                               image="rect-Default-Background",
+                               image="square-Default-Background",
                                compound="center",
                                bootstyle="light"
                                )
 
         for i, component in enumerate([nameLabel, fuelNumber]):
-            component.grid(row=0, column=i, pady=5, padx=5, sticky=W)
+            component.grid(row=0, column=i, pady=5, padx=0, sticky=E)
 
         container.pack(fill=BOTH, expand=YES)
 
-        # Implement Update methods for components data and also innit structure
+        # Implement Update methods for component data and also innit structure
 
 
 class ShipsTab(ScrolledFrame):
@@ -68,6 +69,6 @@ if __name__ == "__main__":
 
     )
 
-    MainComp = ShipComponent(master=window)
+    MainComp = ShipInfoComponent(master=window)
 
     window.mainloop()
