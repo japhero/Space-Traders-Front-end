@@ -20,7 +20,7 @@ class GUI(tk.Tk):
 
         ## Frames for the GUI
         self.frames = {}
-        self.tabs = Tabs
+        # self.tabs = Tabs
         self.shipInfoTab = ShipInfoTab
 
 

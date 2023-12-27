@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import *
 
-import gui.utils as U
+import Other.utils as U
 
 
 class App(tk.Tk):

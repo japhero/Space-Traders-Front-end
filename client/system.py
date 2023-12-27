@@ -29,7 +29,7 @@ class System:
 
     def findTraitInSystem(self, target):
 
-        """_Find a given trait in a system for example a scrapyard or shipyard
+        """Find a given trait in a system for example a scrapyard or shipyard
 
         Raises:
             Exception: raises when target isn't spelled correctly or no target exists.
