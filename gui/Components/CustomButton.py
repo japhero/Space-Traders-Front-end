@@ -34,7 +34,6 @@ class CustomButton(ttk.Button):
         """
 
         super().__init__(master, image=defaultImageName, **kwargs)
-
         self.hoverImage = defaultImageName
         self.defaultImage = hoverImageName
         self.bind("<Enter>", self.enterHover)
@@ -52,6 +51,7 @@ if __name__ == "__main__":
         themename="darkly",
         size=(300, 300),
     )
+    window.style.configure('TButton', focuscolor='')
 
     D = SQUARE_DARK_DEFAULT / "Square-Dark-Default.png"
     H = SQUARE_DARK_DEFAULT / "Square-Dark-Hover.png"
@@ -59,14 +59,12 @@ if __name__ == "__main__":
     defaultImage = ttk.PhotoImage(name="default", file=D)
     hoverImage = ttk.PhotoImage(name="hover", file=H)
 
-    # MyButton = CustomButton(window,
-    #                         "default",
-    #                         "hover",
-    #                         autostyle=False,
-    #                         compound="center",
-    #                         text="test")
+    MyButton = CustomButton(window,
+                            "default",
+                            "hover",
+                            compound="center",
+                            text="test")
 
-    MyButton = ttk.Button(window, autostyle=False)
 
     MyButton.pack(pady=5, padx=0)
     window.mainloop()
