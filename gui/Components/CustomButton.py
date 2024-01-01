@@ -10,6 +10,7 @@ class CustomButton(ttk.Button):
     Class that's goal is to implement 2-3 images as the indicators for its condition and sizes to allow custom images
     to be used-in GUI's
     """
+
     def __init__(self,
                  master: any,
                  default_photo_path: Path,
@@ -47,18 +48,24 @@ class CustomButton(ttk.Button):
             self.photo_paths.update({"pressed": pressed_photo_path})
 
         s = ttk.Style()
-        s.configure("custom.TButton", focuscolor="", borderwidth=0, bootstyle="secondary", background=background)
+        s.configure("custom.TButton",
+                    focuscolor="",
+                    borderwidth=0,
+                    bootstyle="secondary",
+                    background=background,
+                    padding=0, )
+        # https://tcl.tk/man/tcl8.6/TkCmd/ttk_widget.htm#M-width
         s.map("custom.TButton",
               background=[("active", background), ],
               image=[("active", self.photo_images[1]), ("!active", self.photo_images[0])])
+        print(s.element_options("custom.TButton.label"))
 
         self.configure(style="custom.TButton")
-
         self.bind("<Configure>", self.__resize)
 
-    def __resize(self, event: any) -> None:
-        width = self.winfo_width()
-        height = self.winfo_height()
+    def __resize(self, event: any, width: int = None, height: int = None) -> None:
+        width = self.winfo_width() if not width else width
+        height = self.winfo_height() if not height else height
         resized_container = []
         for keys, path in self.photo_paths.items():
             image = Image.open(path)
@@ -66,6 +73,13 @@ class CustomButton(ttk.Button):
             photo = ImageTk.PhotoImage(image)
             resized_container.append(photo)
         self.photo_images = resized_container
+
+    # Definitly better way to do this so that i dont have to call resize twice.
+    # resized is called twice because the __resize is passed and bound to the <Configure> event which passes an event
+    # to the method which is not needed in this case. So i have to call it again with the width and height parameters
+    # thats also why __resize is private.
+    def resize(self, width, height):
+        self.__resize(None, width=width, height=height)
 
 
 if __name__ == "__main__":
@@ -76,13 +90,13 @@ if __name__ == "__main__":
 
     D = SQUARE_DARK_DEFAULT / "Square-Dark-Default.png"
     H = SQUARE_DARK_DEFAULT / "Square-Dark-Hover.png"
+    for x in range(3):
+        MyButton = CustomButton(window,
+                                D,
+                                H,
+                                compound="center",
+                                text="test", )
 
-    MyButton = CustomButton(window,
-                            D,
-                            H,
-                            compound="center",
-                            text="test", )
-
-    MyButton.pack(pady=30)
+        MyButton.pack(pady=10)
 
     window.mainloop()
